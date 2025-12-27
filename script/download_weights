@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+"""
+Download OuteTTS 1.0-1B model weights from HuggingFace.
+
+This script is run during the Cog build process to cache the model
+weights in the Docker image.
+"""
+
+from __future__ import annotations
+
+import os
+
+# The outetts library handles downloading from HuggingFace Hub automatically.
+# We just need to trigger the model initialization to download the weights.
+# They'll be cached in the default HuggingFace cache directory.
+
+
+def main() -> None:
+    print("Downloading OuteTTS 1.0-1B model weights...")
+
+    import outetts
+
+    # Initialize with HF backend - this downloads the model
+    config = outetts.ModelConfig.auto_config(
+        model=outetts.Models.VERSION_1_0_SIZE_1B,
+        backend=outetts.Backend.HF,
+    )
+
+    print("Initializing interface (this triggers the download)...")
+    interface = outetts.Interface(config=config)
+
+    # Also pre-load a default speaker to cache that
+    print("Loading default speaker...")
+    interface.load_default_speaker("EN-FEMALE-1-NEUTRAL")
+
+    print("Download complete!")
+
+
+if __name__ == "__main__":
+    main()
