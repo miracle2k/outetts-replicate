@@ -18,13 +18,8 @@ from cog import BasePredictor, Input, Path as CogPath
 MODEL_ID = "OuteAI/Llama-OuteTTS-1.0-1B"
 CACHE_DIR = "./weights"
 
-# Available default speakers in OuteTTS 1.0
-DEFAULT_SPEAKERS = [
-    "EN-FEMALE-1-NEUTRAL",
-    "EN-FEMALE-2-NEUTRAL",
-    "EN-MALE-1-NEUTRAL",
-    "EN-MALE-2-NEUTRAL",
-]
+# OuteTTS 1.0-1B only includes one default speaker
+DEFAULT_SPEAKER = "EN-FEMALE-1-NEUTRAL"
 
 
 class Predictor(BasePredictor):
@@ -50,7 +45,7 @@ class Predictor(BasePredictor):
             default="سلام، حال شما چطور است؟",
         ),
         speaker: str = Input(
-            description="Speaker voice to use. Options: EN-FEMALE-1-NEUTRAL, EN-FEMALE-2-NEUTRAL, EN-MALE-1-NEUTRAL, EN-MALE-2-NEUTRAL",
+            description="Speaker voice ID. Currently only EN-FEMALE-1-NEUTRAL is available.",
             default="EN-FEMALE-1-NEUTRAL",
         ),
         temperature: float = Input(
@@ -63,11 +58,10 @@ class Predictor(BasePredictor):
         """Generate speech from text."""
         import outetts
 
-        # Load speaker (use cached default if matching)
-        if speaker == "EN-FEMALE-1-NEUTRAL":
-            spk = self.default_speaker
-        else:
-            spk = self.interface.load_default_speaker(speaker)
+        # Use the only available default speaker
+        if speaker.upper() != "EN-FEMALE-1-NEUTRAL":
+            raise ValueError(f"Speaker {speaker!r} not available. Only EN-FEMALE-1-NEUTRAL is supported.")
+        spk = self.default_speaker
 
         # Generate audio
         generation = self.interface.generate(
