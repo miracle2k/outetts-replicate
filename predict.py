@@ -50,9 +50,8 @@ class Predictor(BasePredictor):
             default="سلام، حال شما چطور است؟",
         ),
         speaker: str = Input(
-            description="Speaker voice to use.",
+            description="Speaker voice to use. Options: EN-FEMALE-1-NEUTRAL, EN-FEMALE-2-NEUTRAL, EN-MALE-1-NEUTRAL, EN-MALE-2-NEUTRAL",
             default="EN-FEMALE-1-NEUTRAL",
-            choices=DEFAULT_SPEAKERS,
         ),
         temperature: float = Input(
             description="Sampling temperature. Lower = more deterministic, higher = more varied.",
