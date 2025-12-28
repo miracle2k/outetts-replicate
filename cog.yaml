@@ -5,6 +5,12 @@ build:
   gpu: true
   cuda: "12.2"
   python_version: "3.11"
+  system_packages:
+    - "cmake"
+    - "build-essential"
+  run:
+    # Force llama-cpp-python to build everything from source (GLIBC compat)
+    - "LLAMA_CPP_LIB= CMAKE_ARGS='-DGGML_NATIVE=OFF' pip install llama-cpp-python --no-binary llama-cpp-python --force-reinstall"
   python_packages:
     - "torch==2.5.1"
     - "torchaudio==2.5.1"
